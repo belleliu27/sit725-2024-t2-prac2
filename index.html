@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator</title>
+  </head>
+  <body>
+    <h1>Calculator</h1>
+
+    <h2>GET: Add Two Numbers</h2>
+    <form id="get-form">
+      <label for="num1">Number 1:</label>
+      <input type="number" id="num1-get" name="num1" required />
+      <label for="num2">Number 2:</label>
+      <input type="number" id="num2-get" name="num2" required />
+      <button type="submit">Add</button>
+    </form>
+    <p id="get-result"></p>
+
+    <h2>POST: Basic Calculator</h2>
+    <form id="post-form">
+      <label for="operation">Operation:</label>
+      <select id="operation" name="operation" required>
+        <option value="add">Add</option>
+        <option value="subtract">Subtract</option>
+        <option value="multiply">Multiply</option>
+        <option value="divide">Divide</option>
+      </select>
+      <label for="num1-post">Number 1:</label>
+      <input type="number" id="num1-post" name="num1" required />
+      <label for="num2-post">Number 2:</label>
+      <input type="number" id="num2-post" name="num2" required />
+      <button type="submit">Calculate</button>
+    </form>
+    <p id="post-result"></p>
+
+    <script>
+      document
+        .getElementById("get-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const num1 = parseFloat(document.getElementById("num1-get").value);
+          const num2 = parseFloat(document.getElementById("num2-get").value);
+          const response = await fetch(`/add?num1=${num1}&num2=${num2}`);
+          const result = await response.text();
+          document.getElementById("get-result").innerText = result;
+        });
+
+      document
+        .getElementById("post-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const operation = document.getElementById("operation").value;
+          const num1 = parseFloat(document.getElementById("num1-post").value);
+          const num2 = parseFloat(document.getElementById("num2-post").value);
+          const response = await fetch("/calculate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ operation, num1, num2 }),
+          });
+          const result = await response.text();
+          document.getElementById("post-result").innerText = result;
+        });
+    </script>
+  </body>
+</html>
